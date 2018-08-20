@@ -69,12 +69,22 @@ namespace Sitecore.Support.XA.Foundation.Grid.Commands
                 parameters[item.Name] = descriptor.Value;
               }
             }
-            renderingByUniqueId.Parameters = new UrlString(parameters).GetUrl();
+            renderingByUniqueId.Parameters = new UrlString(EscapeDataValues(parameters)).GetUrl();
             string layout = WebEditUtil.ConvertXMLLayoutToJSON(layoutDefinition.ToXml());
             this.ReturnLayout(layout, renderingByUniqueId.UniqueId, placeholder);
           }
         }
       }
+    }
+
+    public static NameValueCollection EscapeDataValues(NameValueCollection nvc)
+    {
+      string[] allKeys = nvc.AllKeys;
+      foreach (string name in allKeys)
+      {
+        nvc[name] = Uri.EscapeDataString(nvc[name]);
+      }
+      return nvc;
     }
   }
 }
